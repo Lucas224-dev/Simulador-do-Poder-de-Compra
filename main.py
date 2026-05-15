@@ -42,26 +42,22 @@ def carregar_sm():
         return pd.DataFrame()
 
 def calcular_poder_de_compra(ano_inicio : int, ano_fim : int, df_ipca : pd.DataFrame): 
-    # 1. Filtra os anos usando a coluna de data convertida para ano
-    mask = (df_ipca['data'].dt.year >= ano_inicio) & (df_ipca['data'].dt.year <= ano_fim)
+    mask = (df_ipca['data'].dt.year >= ano_inicio) & (df_ipca['data'].dt.year <= ano_fim)  # Filtra os anos usando a coluna de data convertida para ano
     df_filtrado = df_ipca.loc[mask]
     
     if df_filtrado.empty:
         return 0.0, 0.0
     
-    # 2. Cálculo da inflação acumulada
-    fatores = (df_filtrado['valor'] / 100) + 1
+    fatores = (df_filtrado['valor'] / 100) + 1  # Cálculo da inflação acumulada
     fator_acumulado = fatores.prod()
     
-    # 3. Definição das variáveis de retorno
-    inflacao_total_perc = (fator_acumulado - 1) * 100
+    inflacao_total_perc = (fator_acumulado - 1) * 100 # Definição das variáveis de retorno
     valor_corrigido = 100 * fator_acumulado # Simulação baseada em R$ 100,00
     
     return round(valor_corrigido, 2), round(inflacao_total_perc, 2)
 
 def calcular_salario_ipca(salario_antigo, ano_inicio, ano_fim, df_ipca):
-    # Lógica de datas para pegar o ano cheio
-    data_inicio_limite = f"{int(ano_inicio)}-01-01"
+    data_inicio_limite = f"{int(ano_inicio)}-01-01"  # Lógica de datas para pegar o ano cheio
     data_fim_limite = f"{int(ano_fim)}-12-31"
     
     filtro_periodo = (df_ipca['data'] >= data_inicio_limite) & (df_ipca['data'] <= data_fim_limite)
