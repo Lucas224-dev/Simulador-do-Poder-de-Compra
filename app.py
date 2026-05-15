@@ -7,18 +7,15 @@ from main import (
     calcular_salario_ipca
 )
 
-# Configuração da página (Opcional, mas deixa o portfólio mais profissional)
-st.set_page_config(page_title="Simulador de Poder de Compra", layout="wide")
+st.set_page_config(page_title="Simulador de Poder de Compra", layout="wide") # Configuração da página 
 
 st.title('💰 Simulador do Poder de Compra')
 st.markdown('💸 Compare o impacto da inflação (IPCA) no real ao longo do tempo.')
 
-# Início do processamento de dados (ETL Pipeline)
-df_ipca = carregar_ipca()
+df_ipca = carregar_ipca() # Início do processamento de dados (ETL Pipeline)
 df_sm = carregar_sm()
 
-# --- SEÇÃO 1: CALCULADORA DE INFLAÇÃO ACUMULADA ---
-st.header("🧮 Calculadora de Inflação Acumulada")
+st.header("🧮 Calculadora de Inflação Acumulada") # Calculadora de inflação acumulada
 anos_disponiveis = sorted(list(df_ipca['data'].dt.year.unique()))
 
 periodo = st.select_slider(
@@ -28,8 +25,7 @@ periodo = st.select_slider(
 )
 ano_inicial, ano_final = periodo
 
-# Executa lógica de negócio do main.py
-valor_corrigido, inflacao_perc = calcular_poder_de_compra(ano_inicial, ano_final, df_ipca)
+valor_corrigido, inflacao_perc = calcular_poder_de_compra(ano_inicial, ano_final, df_ipca) # Executa lógica de negócio do main.py
 
 col1, col2 = st.columns(2)
 with col1:
@@ -45,8 +41,7 @@ with col2:
         delta_color="inverse"
     )
 
-# --- SEÇÃO 2: SIMULADOR DE SALÁRIO ---
-st.header("👤 Seu Salário Corrigido pela Inflação")
+st.header("👤 Seu Salário Corrigido pela Inflação") # Simulador para salário
 st.subheader('🤑 Veja quanto você precisa ganhar para manter seu poder de compra')
 
 col_ano_ini, col_ano_fim, col_valor = st.columns(3)
@@ -59,8 +54,7 @@ with col_valor:
 
 st.markdown("---")
 
-# VALIDAÇÃO LÓGICA (Previne o TypeError e o NameError)
-if ano_salario_fim < ano_salario_ini:
+if ano_salario_fim < ano_salario_ini: # Validação lógica
     st.warning("⚠️ O ano final deve ser maior ou igual ao ano inicial para calcular o reajuste.")
 else:
     salario_necessario = calcular_salario_ipca(salario_usuario, ano_salario_ini, ano_salario_fim, df_ipca)
@@ -72,8 +66,7 @@ else:
 
 st.markdown("---")
 
-# --- SEÇÃO 3: VISUALIZAÇÃO DE DADOS ---
-st.header("📊 Gráficos Históricos (Pós-Plano Real)")
+st.header("📊 Gráficos Históricos (Pós-Plano Real)") # Visualização de dados (gráficos)
 
 st.subheader('📈 Variação Mensal do IPCA (%)')
 fig_ipca = px.line(df_ipca, x='data', y='valor', labels={'data': 'Período', 'valor': 'Variação (%)'}, template='plotly_dark')
